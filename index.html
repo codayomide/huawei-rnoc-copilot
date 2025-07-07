@@ -7,30 +7,50 @@
     <title>RNOC Assistant</title>
   </head>
   <body>
-    <header>
-      <img src="" alt="" />
-      <div><button></button><button></button><button></button></div>
-    </header>
+    <div id="container">
+      <header id="header">
+        <img src=".resources/images/logo.jpg" alt="logo" />
 
-    <main>
-        <section>
-            <!-- Chat content goes here -->
-        </section>
+        <div>
+          <button>
+            <img
+              src="./resources/icons/open-fullscreen.svg"
+              alt="Open Fullscreen"
+            />
+          </button>
+          <button>
+            <img
+              src="./resources/icons/close-fullscreen.svg"
+              alt="Close Fullscreen"
+            />
+          </button>
+          <button>
+            <img src="./resources/icons/close-icon.svg" alt="Close Icon" />
+          </button>
+        </div>
+      </header>
 
-        <section>
-            <div class="chat-input">
-                <textarea name="" id="message-input" placeholder="Type your message..."></textarea>
-
-                <div class="chat-input-btn-container">
-                    <div id="model-select-dropdown"></div>
-                    <button id="send-btn">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="white" viewBox="0 0 24 24">
-                            <path d="M2.01 21 23 12 2.01 3 2 10l15 2-15 2 .01 7z" />
-                        </svg>
-                    </button>
-                </div>
-            </div>
-        </section>
-    </main>
+      <main id="main">
+        <div id="chat-body">
+          <!-- Chat content goes here -->
+        </div>
+        <div div="chat-input">
+          <textarea
+            name=""
+            id="message-input"
+            placeholder="Type your message..."
+          ></textarea>
+          <div id="chat-input-btn-container">
+            <div id="model-select-dropdown"></div>
+            <button id="send-btn">
+              <img
+                src="resources/icons/paper-plane-icon.svg"
+                alt="Paper plane icon"
+              />
+            </button>
+          </div>
+        </div>
+      </main>
+    </div>
   </body>
 </html>
