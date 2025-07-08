@@ -1,0 +1,176 @@
+:root {
+  --red: #cf0a2c;
+  --light-pink: #f3c2ca;
+  --white: #f7f7f7;
+  --dark-gray: #393939;
+  --black: #2c2c2c;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
+
+body {
+  background-color: var(--white);
+}
+
+.hidden {
+  display: none;
+}
+
+#container {
+  width: 100%;
+  height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+}
+
+/* header */
+
+#header {
+  width: 100%;
+
+  padding: 0.5rem 1rem 0.5rem 0.8rem;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#header #logo {
+  height: 2rem;
+}
+
+#header__btns-container button {
+  border: none;
+  background: none;
+}
+
+#header__btns-container .fullscreen-toggle-btns {
+  margin-right: 0.2rem;
+}
+
+#header__btns-container img {
+  height: 0.9rem;
+}
+
+/* main */
+
+#main {
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+}
+
+#chat-body {
+  width: 100%;
+  flex: 1;
+  padding: 1rem;
+  overflow-y: auto;
+}
+
+.message {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  animation: slideIn 0.3s ease;
+}
+
+.message.user {
+  align-items: flex-end;
+}
+
+.message.ai {
+  align-items: flex-start;
+}
+
+.message-content {
+  max-width: 90%;
+
+  border-radius: 15px;
+  padding: 10px 15px;
+
+  font-size: 0.7rem;
+  line-height: 1.4;
+
+  transition: transform 0.2s;
+  word-break: break-word;
+}
+
+.user .message-content {
+  background: var(--light-pink);
+  color: var(--black);
+  border-radius: 1rem;
+}
+
+.ai .message-content {
+  color: var(--dark-gray);
+  border-radius: 1rem;
+}
+
+#chat-input {
+  background: var(--white);
+
+  border-radius: 1rem;
+  border: 1px solid lightgray;
+  margin: 0 20px 20px;
+  padding: 0.5rem;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  animation: slideUp 0.5s ease;
+}
+
+#chat-input #message-input {
+  background: var(--white);
+
+  font-size: 0.7rem;
+  line-height: 1.5;
+
+  width: 100%;
+  min-height: 1.5rem;
+  max-height: 15rem;
+  overflow-y: auto;
+
+  border: none;
+  outline: none;
+  border-radius: 12px;
+  padding: 0.5rem;
+
+  resize: none;
+  transition: height 0.2s ease;
+}
+
+#chat-input-btn-container {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+#chat-input #send-btn {
+  background: var(--red);
+  color: var(--white);
+
+  border: none;
+  border-radius: 50%;
+  padding: 10px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+}
+
+#chat-input #send-btn img {
+  height: 1.1rem;
+}

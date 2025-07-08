@@ -4,24 +4,26 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./styles.css" />
     <title>RNOC Assistant</title>
   </head>
   <body>
     <div id="container">
       <header id="header">
-        <img src=".resources/images/logo.jpg" alt="logo" />
+        <img src="./resources/images/logo.jpg" alt="logo" id="logo" />
 
-        <div>
-          <button>
+        <div id="header__btns-container">
+          <button class="fullscreen-toggle-btns">
             <img
               src="./resources/icons/open-fullscreen.svg"
               alt="Open Fullscreen"
             />
           </button>
-          <button>
+          <button class="fullscreen-toggle-btns">
             <img
               src="./resources/icons/close-fullscreen.svg"
               alt="Close Fullscreen"
+              class="hidden"
             />
           </button>
           <button>
@@ -34,7 +36,8 @@
         <div id="chat-body">
           <!-- Chat content goes here -->
         </div>
-        <div div="chat-input">
+
+        <div id="chat-input">
           <textarea
             name=""
             id="message-input"
@@ -42,6 +45,7 @@
           ></textarea>
           <div id="chat-input-btn-container">
             <div id="model-select-dropdown"></div>
+            
             <button id="send-btn">
               <img
                 src="resources/icons/paper-plane-icon.svg"
@@ -52,5 +56,7 @@
         </div>
       </main>
     </div>
+
+    <script src="script.js"></script>
   </body>
 </html>
