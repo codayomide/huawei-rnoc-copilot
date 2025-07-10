@@ -2,9 +2,6 @@ const sendBtn = document.getElementById("send-btn");
 const messageInput = document.getElementById("message-input");
 const chatBody = document.getElementById("chat-body");
 
-// const newChatBtn = document.getElementById('new-chat-btn');
-// const chatListContainer = document.getElementById('chat-list');
-
 const maxHeight = parseInt(
   window.getComputedStyle(messageInput).getPropertyValue("max-height")
 );
@@ -26,7 +23,31 @@ messageInput.addEventListener("input", () => {
 const addMessage = (text, type) => {
   const messageDiv = document.createElement("div");
   messageDiv.className = `message ${type}`;
-  let content = `<div class="message-content">${text}</div>`;
+  // let content = `<div class="message-content">${text}</div>`;
+
+  let content = "Hey";
+
+  if (type == "user") {
+    content = `<div class="message-wrapper">
+              <div class="message-content-wrapper">
+                <div class="message-content">
+                  ${text}
+                  <span class="timestamp">10:32</span>
+                </div>
+
+                <button class="copy-button">
+                  <img src="./resources/icons/copy-item.svg" alt="" />
+                </button>
+              </div>
+              <img
+                src="./resources/images/user-avatar.png"
+                alt="User Avatar"
+                class="avatar"
+              />
+            </div>`;
+  }
+
+
   messageDiv.innerHTML = content;
 
   chatBody.appendChild(messageDiv);
@@ -43,6 +64,12 @@ const sendMessage = () => {
 
   messageInput.value = "";
   showLoading();
+
+  setTimeout(() => {
+    const reply = `Thanks for your message: "${text}". How can I assist you next?`;
+    addMessage(reply, "ai");
+    hideLoading();
+  }, 1000);
 
   // MessageProcessor.process({
   //     serviceId: 'autin_copi_generate_ai_response',

@@ -10,7 +10,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: sans-serif;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body {
@@ -21,12 +21,14 @@ body {
   display: none;
 }
 
-#container {
+.container {
   width: 100%;
   height: 100vh;
 
   display: flex;
   flex-direction: column;
+
+  overflow: hidden;
 }
 
 /* header */
@@ -34,7 +36,7 @@ body {
 #header {
   width: 100%;
 
-  padding: 0.5rem 1rem 0.5rem 0.8rem;
+  padding: 1rem 1rem 1rem 0.8rem;
 
   display: flex;
   flex-direction: row;
@@ -66,17 +68,98 @@ body {
 
   display: flex;
   flex-direction: column;
+
+  overflow: hidden;
 }
 
 #chat-body {
   width: 100%;
   flex: 1;
-  padding: 1rem;
   overflow-y: auto;
+  padding: 1rem;
 }
 
-.message {
-  margin-bottom: 20px;
+.message.user {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+
+  margin-bottom: 1.5rem;
+}
+
+.user .message-wrapper {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.4rem;
+  max-width: 90%;
+}
+
+.message-content-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.user .message-content {
+  background: var(--light-pink);
+  color: var(--black);
+  border-radius: 1rem;
+  padding: 0.6rem 1rem 0.3rem 1rem;
+  font-size: 1rem;
+  line-height: 1.4;
+  position: relative;
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.user .timestamp {
+  color: #333;
+  font-size: 0.75rem;
+
+  opacity: 0.6;
+  align-self: flex-end;
+}
+
+.message.user .avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  object-fit: cover;
+  align-self: flex-start;
+}
+
+.message .copy-button {
+  border: none;
+  background-color: transparent;
+}
+
+.message.user .copy-button {
+  align-self: flex-end;
+  margin: 10px;
+}
+
+.message.ai {
+  align-items: flex-start;
+}
+
+.ai .message-wrapper {
+  display: flex;
+  flex-direction: column;
+
+  gap: 0.6rem;
+  max-width: 90%;
+}
+
+.ai .btns-container {
+  display: flex;
+  gap: 1rem;
+}
+
+/* .message {
+  margin-bottom: 1.5rem;
   display: flex;
   flex-direction: column;
   animation: slideIn 0.3s ease;
@@ -94,9 +177,8 @@ body {
   max-width: 90%;
 
   border-radius: 15px;
-  padding: 10px 15px;
 
-  font-size: 0.7rem;
+  font-size: 1rem;
   line-height: 1.4;
 
   transition: transform 0.2s;
@@ -106,20 +188,22 @@ body {
 .user .message-content {
   background: var(--light-pink);
   color: var(--black);
+
   border-radius: 1rem;
+  padding: 0.6rem 1rem;
 }
 
 .ai .message-content {
   color: var(--dark-gray);
   border-radius: 1rem;
-}
+} */
 
 #chat-input {
   background: var(--white);
 
   border-radius: 1rem;
   border: 1px solid lightgray;
-  margin: 0 20px 20px;
+  margin: 0 1rem 1rem;
   padding: 0.5rem;
 
   display: flex;
@@ -132,7 +216,7 @@ body {
 #chat-input #message-input {
   background: var(--white);
 
-  font-size: 0.7rem;
+  font-size: 1rem;
   line-height: 1.5;
 
   width: 100%;
@@ -152,7 +236,45 @@ body {
 #chat-input-btn-container {
   width: 100%;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#model-select-dropdown {
+  display: flex;
+  align-items: center;
+  padding: 0.4rem 0.75rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 9999px; /* pill shape */
+
+  color: #393939;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  gap: 0.5rem;
+  max-width: fit-content;
+  box-shadow: 0 0 0 transparent;
+  transition: box-shadow 0.2s ease;
+}
+
+#model-select-dropdown .label {
+  white-space: nowrap;
+}
+
+#model-select-dropdown .divider {
+  height: 16px;
+  width: 1px;
+  background-color: #ccc;
+}
+
+#model-select-dropdown .globe-icon {
+  height: 16px;
+  width: 16px;
+}
+
+#model-select-dropdown .caret-down-icon {
+  height: 9px;
+  width: 12px;
 }
 
 #chat-input #send-btn {
