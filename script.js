@@ -25,7 +25,7 @@ const addMessage = (text, type) => {
   messageDiv.className = `message ${type}`;
   // let content = `<div class="message-content">${text}</div>`;
 
-  let content = "Hey";
+  let content = "";
 
   if (type == "user") {
     content = `<div class="message-wrapper">
@@ -35,8 +35,8 @@ const addMessage = (text, type) => {
                   <span class="timestamp">10:32</span>
                 </div>
 
-                <button class="copy-button">
-                  <img src="./resources/icons/copy-item.svg" alt="" />
+                <button class="util-button copy-button">
+                  <img src="./resources/icons/copy-item-icon.png" alt="" />
                 </button>
               </div>
               <img
@@ -47,6 +47,29 @@ const addMessage = (text, type) => {
             </div>`;
   }
 
+  else if (type == "ai") {
+    content = `<div class="message-wrapper">
+              <div class="timestamp">2025-07-10 08:23</div>
+
+              <div class="message-content">
+               ${text}
+              </div>
+
+              <div class="btns-container">
+                <button class="util-button copy-button">
+                  <img src="./resources/icons/copy-item-icon.png" alt="" />
+                </button>
+
+                <button class="util-button like-button">
+                  <img src="./resources/icons/thumbs-up-icon.png" alt="" />
+                </button>
+
+                <button class="util-button dislike-button">
+                  <img src="./resources/icons/thumbs-down-icon.png" alt="" />
+                </button>
+              </div>
+            </div>`;
+  }
 
   messageDiv.innerHTML = content;
 
