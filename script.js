@@ -6,35 +6,39 @@ const maxHeight = parseInt(
   window.getComputedStyle(messageInput).getPropertyValue("max-height")
 );
 
+// State management for conversation flow
+let conversationState = {
+  stage: "initial", // Possible stages: initial, fault_or_progress, notification_method, notification_content, user_selection, progress_tracking, progress_selection
+  selectedOption: null,
+  notificationMethod: null,
+};
+
+// Resize textarea based on input
 messageInput.addEventListener("input", () => {
-  messageInput.style.height = "auto"; // Reset height to shrink if needed
-
+  messageInput.style.height = "auto";
   const scrollHeight = messageInput.scrollHeight;
-
   if (scrollHeight <= maxHeight) {
     messageInput.style.overflowY = "hidden";
     messageInput.style.height = `${scrollHeight}px`;
   } else {
     messageInput.style.overflowY = "auto";
-    messageInput.style.height = `${maxHeight}px`; // Lock at max height
+    messageInput.style.height = `${maxHeight}px`;
   }
 });
 
+// Add message to chat body with streaming effect for AI messages
 const addMessage = (text, type) => {
   const messageDiv = document.createElement("div");
   messageDiv.className = `message ${type}`;
-  // let content = `<div class="message-content">${text}</div>`;
-
   let content = "";
 
-  if (type == "user") {
+  if (type === "user") {
     content = `<div class="message-wrapper">
               <div class="message-content-wrapper">
                 <div class="message-content">
                   ${text}
                   <span class="timestamp">10:32</span>
                 </div>
-
                 <button class="util-button copy-button">
                   <img src="./resources/icons/copy-item-icon.png" alt="" />
                 </button>
@@ -45,79 +49,45 @@ const addMessage = (text, type) => {
                 class="avatar"
               />
             </div>`;
-  }
-
-  else if (type == "ai") {
+    messageDiv.innerHTML = content;
+    chatBody.appendChild(messageDiv);
+    chatBody.scrollTop = chatBody.scrollHeight;
+  } else if (type === "ai") {
     content = `<div class="message-wrapper">
               <div class="timestamp">2025-07-10 08:23</div>
-
-              <div class="message-content">
-               ${text}
-              </div>
-
+              <div class="message-content"></div>
               <div class="btns-container">
                 <button class="util-button copy-button">
                   <img src="./resources/icons/copy-item-icon.png" alt="" />
                 </button>
-
                 <button class="util-button like-button">
                   <img src="./resources/icons/thumbs-up-icon.png" alt="" />
                 </button>
-
                 <button class="util-button dislike-button">
                   <img src="./resources/icons/thumbs-down-icon.png" alt="" />
                 </button>
               </div>
             </div>`;
+    messageDiv.innerHTML = content;
+    chatBody.appendChild(messageDiv);
+    chatBody.scrollTop = chatBody.scrollHeight;
+
+    // Stream the text character by character
+    const contentElement = messageDiv.querySelector(".message-content");
+    let index = 0;
+    const streamInterval = setInterval(() => {
+      if (index < text.length) {
+        contentElement.innerHTML += text[index];
+        chatBody.scrollTop = chatBody.scrollHeight;
+        index++;
+      } else {
+        clearInterval(streamInterval);
+      }
+    }, 25); // 50ms per character
   }
-
-  messageDiv.innerHTML = content;
-
-  chatBody.appendChild(messageDiv);
-  chatBody.scrollTop = chatBody.scrollHeight;
 };
 
-const sendMessage = () => {
-  const text = messageInput.value.trim();
-
-  if (!text) return;
-
-  const formattedText = text.replace(/\n/g, "<br>");
-  addMessage(formattedText, "user");
-
-  messageInput.value = "";
-  showLoading();
-
-  setTimeout(() => {
-    const reply = `Thanks for your message: "${text}". How can I assist you next?`;
-    addMessage(reply, "ai");
-    hideLoading();
-  }, 1000);
-
-  // MessageProcessor.process({
-  //     serviceId: 'autin_copi_generate_ai_response',
-  //     projectName: 'autin_copilot',
-  //     moduleName: 'autin_copilot',
-  //     data: { 'user_input': formattedText },
-  //     success: (res) => {
-  //         const aiResponse = md.render(res.data.llm_answer);
-  //         hideLoading();
-  //         addMessage(aiResponse, 'ai');
-  //     }
-  // });;
-};
-
-sendBtn.addEventListener("click", sendMessage);
-
-messageInput.addEventListener("keypress", (event) => {
-  if (event.key === "Enter" && !event.shiftKey) {
-    event.preventDefault();
-
-    sendBtn.click();
-    messageInput.style.height = "auto"; // reset height after sending
-  }
-});
-
+// Show loading animation
 const showLoading = () => {
   const loadingDiv = document.createElement("div");
   loadingDiv.className = "loading";
@@ -130,9 +100,142 @@ const showLoading = () => {
   chatBody.scrollTop = chatBody.scrollHeight;
 };
 
+// Hide loading animation
 const hideLoading = () => {
   const loadingDiv = document.getElementById("loading");
   if (loadingDiv) {
     loadingDiv.remove();
   }
 };
+
+// Process user input and generate AI response based on state
+const sendMessage = () => {
+  const text = messageInput.value.trim();
+  if (!text) return;
+
+  const formattedText = text.replace(/\n/g, "<br>");
+  addMessage(formattedText, "user");
+  messageInput.value = "";
+  showLoading();
+
+  setTimeout(() => {
+    hideLoading(); // Hide loading before streaming starts
+    let reply = "";
+    const input = text.toUpperCase().trim();
+
+    if (conversationState.stage === "initial") {
+      if (input === "A") {
+        conversationState.stage = "site_down";
+        reply =
+          "Please provide details about the site down issue you want to analyze.";
+      } else if (input === "B") {
+        conversationState.stage = "fault_or_progress";
+        conversationState.selectedOption = "fault_ticket";
+        reply =
+          "Fine, for ticket handling I can help on Fault Notification or Progress Tracking. Which one do you want?";
+      } else {
+        reply =
+          "Please select a valid option: A. I want to analyze a Site down. B. I want to handle a Fault/Ticket.";
+      }
+    } else if (conversationState.stage === "fault_or_progress") {
+      if (input.toLowerCase().includes("fault notification")) {
+        conversationState.stage = "notification_method";
+        reply =
+          "In what form would you like to notify? A. Telephone B. WhatsApp C. Welink D. SMS";
+      } else if (input.toLowerCase().includes("progress tracking")) {
+        conversationState.stage = "progress_selection";
+        reply = "Whose progress do you want to track? A. BO B. FME";
+      } else {
+        reply =
+          "Please specify either 'Fault Notification' or 'Progress Tracking'.";
+      }
+    } else if (conversationState.stage === "notification_method") {
+      if (["A", "B", "C", "D"].includes(input)) {
+        conversationState.notificationMethod = input;
+        conversationState.stage = "notification_content";
+        reply =
+          "Please enter the content you wish to notify, which will be sent directly to the recipient.";
+      } else {
+        reply =
+          "Please select a valid notification method: A. Telephone B. WhatsApp C. Welink D. SMS";
+      }
+    } else if (conversationState.stage === "notification_content") {
+      conversationState.stage = "user_selection";
+      reply =
+        "Please select which user group/user you want to notify with a checkmark (e.g., type the group/user name).";
+    } else if (conversationState.stage === "user_selection") {
+      conversationState.stage = "notification_complete";
+      reply = `Very good, you have completed all the necessary steps. We will notify you of the progress once the sending is completed. Please pay attention to the dialog box messages. The current progress is as follows: Complete/Total`;
+      // Reset state after completion
+      setTimeout(() => {
+        conversationState = {
+          stage: "initial",
+          selectedOption: null,
+          notificationMethod: null,
+        };
+      }, 2000);
+    } else if (conversationState.stage === "progress_selection") {
+      if (input === "A" || input === "B") {
+        const group = input === "A" ? "BO" : "FME";
+        reply = `Tracking progress for ${group}. The current progress is: Complete/Total. Would you like to track another group or return to the main menu? (Type 'main' to return or select another group: A. BO B. FME)`;
+        conversationState.stage = "progress_tracking";
+      } else {
+        reply = "Please select a valid group: A. BO B. FME";
+      }
+    } else if (conversationState.stage === "progress_tracking") {
+      if (input.toLowerCase() === "main") {
+        conversationState.stage = "initial";
+        conversationState.selectedOption = null;
+        reply =
+          "Hello, I am your AI troubleshooting assistant. You can start with the following options: A. I want to analyze a Site down. B. I want to handle a Fault/Ticket.";
+      } else if (input === "A" || input === "B") {
+        const group = input === "A" ? "BO" : "FME";
+        reply = `Tracking progress for ${group}. The current progress is: Complete/Total. Would you like to track another group or return to the main menu? (Type 'main' to return or select another group: A. BO B. FME)`;
+      } else {
+        reply =
+          "Please select a valid option: A. BO B. FME or type 'main' to return to the main menu.";
+      }
+    } else if (conversationState.stage === "site_down") {
+      reply = `Received details: "${text}". Analysis complete. Would you like to analyze another site down issue or return to the main menu? (Type 'main' to return or provide new details.)`;
+      conversationState.stage = "site_down_followup";
+    } else if (conversationState.stage === "site_down_followup") {
+      if (input.toLowerCase() === "main") {
+        conversationState.stage = "initial";
+        conversationState.selectedOption = null;
+        reply =
+          "Hello, I am your AI troubleshooting assistant. You can start with the following options: A. I want to analyze a Site down. B. I want to handle a Fault/Ticket.";
+      } else {
+        reply = `Received details: "${text}". Analysis complete. Would you like to analyze another site down issue or return to the main menu? (Type 'main' to return or provide new details.)`;
+      }
+    } else {
+      reply =
+        "Something went wrong. Let's start over. Hello, I am your AI troubleshooting assistant. You can start with the following options: A. I want to analyze a Site down. B. I want to handle a Fault/Ticket.";
+      conversationState = {
+        stage: "initial",
+        selectedOption: null,
+        notificationMethod: null,
+      };
+    }
+
+    addMessage(reply, "ai");
+  }, 4000); // Delay before streaming starts
+};
+
+// Event listeners
+sendBtn.addEventListener("click", sendMessage);
+
+messageInput.addEventListener("keypress", (event) => {
+  if (event.key === "Enter" && !event.shiftKey) {
+    event.preventDefault();
+    sendBtn.click();
+    messageInput.style.height = "auto";
+  }
+});
+
+// Initialize conversation
+setTimeout(() => {
+  addMessage(
+    "Hello, I am your AI troubleshooting assistant. You can start with the following options: A. I want to analyze a Site down. B. I want to handle a Fault/Ticket.",
+    "ai"
+  );
+}, 500);
