@@ -53,21 +53,23 @@ const addMessage = (text, type) => {
     chatBody.appendChild(messageDiv);
     chatBody.scrollTop = chatBody.scrollHeight;
   } else if (type === "ai") {
-    content = `<div class="message-wrapper">
-              <div class="timestamp">2025-07-10 08:23</div>
-              <div class="message-content"></div>
-              <div class="btns-container">
-                <button class="util-button copy-button">
-                  <img src="./resources/icons/copy-item-icon.png" alt="" />
-                </button>
-                <button class="util-button like-button">
-                  <img src="./resources/icons/thumbs-up-icon.png" alt="" />
-                </button>
-                <button class="util-button dislike-button">
-                  <img src="./resources/icons/thumbs-down-icon.png" alt="" />
-                </button>
-              </div>
-            </div>`;
+    content = `
+    <img src="./resources/images/user-avatar.png" class="profile-pic" alt="">
+    <div class="message-wrapper">
+      <div class="timestamp">2025-07-10 08:23</div>
+      <div class="message-content"></div>
+      <div class="btns-container">
+        <button class="util-button copy-button">
+          <img src="./resources/icons/copy-item-icon.png" alt="" />
+        </button>
+        <button class="util-button like-button">
+          <img src="./resources/icons/thumbs-up-icon.png" alt="" />
+        </button>
+        <button class="util-button dislike-button">
+          <img src="./resources/icons/thumbs-down-icon.png" alt="" />
+        </button>
+      </div>
+    </div>`;
     messageDiv.innerHTML = content;
     chatBody.appendChild(messageDiv);
     chatBody.scrollTop = chatBody.scrollHeight;
