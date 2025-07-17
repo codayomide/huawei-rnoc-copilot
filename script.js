@@ -6,6 +6,8 @@ const maxHeight = parseInt(
   window.getComputedStyle(messageInput).getPropertyValue("max-height")
 );
 
+let isLoading = false;
+
 // State management for conversation flow
 let conversationState = {
   stage: "initial", // Possible stages: initial, fault_or_progress, notification_method, notification_content, user_selection, progress_tracking, progress_selection
@@ -23,6 +25,12 @@ messageInput.addEventListener("input", () => {
   } else {
     messageInput.style.overflowY = "auto";
     messageInput.style.height = `${maxHeight}px`;
+  }
+
+  if (isLoading || messageInput.value.trim() === '') {
+    sendBtn.disabled = true;
+  } else {
+    sendBtn.disabled = false;
   }
 });
 
@@ -91,22 +99,32 @@ const addMessage = (text, type) => {
 
 // Show loading animation
 const showLoading = () => {
+  isLoading = true;
+
   const loadingDiv = document.createElement("div");
+  
   loadingDiv.className = "loading";
   loadingDiv.id = "loading";
+  
   for (let i = 0; i < 8; i++) {
     const dot = document.createElement("div");
     loadingDiv.appendChild(dot);
   }
+  
   chatBody.appendChild(loadingDiv);
   chatBody.scrollTop = chatBody.scrollHeight;
+
+  sendBtn.disabled = true;
 };
 
 // Hide loading animation
 const hideLoading = () => {
+  isLoading = false;
   const loadingDiv = document.getElementById("loading");
+
   if (loadingDiv) {
     loadingDiv.remove();
+    sendBtn.disabled = false;
   }
 };
 
@@ -241,3 +259,87 @@ setTimeout(() => {
     "ai"
   );
 }, 500);
+
+const initializeLandingPage = () => {
+  const landingPage = document.getElementById("landing-page");
+  const chatMain = document.getElementById("main");
+  const modelButtons = document.querySelectorAll(".model-button");
+  const confirmationMessage = document.getElementById("confirmation-message");
+
+  // New elements for displaying model name
+  // const headerModelName = document.getElementById('header-model-name');
+  const inputModelName = document.getElementById("input-model-name");
+
+  modelButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const selectedModel = button.getAttribute("data-model");
+      window.selectedModel = selectedModel; // Store globally
+
+      // Update model name display in both locations
+      // headerModelName.textContent = selectedModel;
+      inputModelName.textContent = selectedModel;
+
+      confirmationMessage.textContent = `You have selected ${selectedModel}`;
+      confirmationMessage.classList.add("show");
+
+      setTimeout(() => {
+        landingPage.classList.add("hidden");
+        chatMain.classList.remove("hidden");
+      }, 500); // Wait for confirmation message to be seen
+    });
+  });
+};
+
+const appWindow = document.getElementById("app-window");
+const minimizeBtn = document.getElementById("minimize-btn");
+const maximizeBtn = document.getElementById("maximize-btn");
+
+let isMaximized = false;
+let prevSize = {};
+
+minimizeBtn?.addEventListener("click", () => {
+  appWindow.style.height = appWindow.style.minHeight;
+  appWindow.style.width = appWindow.style.minWidth;
+  appWindow.style.overflow = "hidden";
+
+  minimizeBtn.classList.add("hidden");
+  maximizeBtn.classList.remove("hidden");
+  isMaximized = false;
+});
+
+maximizeBtn?.addEventListener("click", () => {
+  appWindow.style.top = "0";
+  appWindow.style.left = "0";
+  appWindow.style.width = "100vw";
+  appWindow.style.height = "100vh";
+
+  minimizeBtn.classList.remove("hidden");
+  maximizeBtn.classList.add("hidden");
+  isMaximized = true;
+});
+
+let isDragging = false;
+let offset = { x: 0, y: 0 };
+
+const header = document.getElementById("header");
+
+header.style.cursor = "move";
+
+header.addEventListener("mousedown", (e) => {
+  isDragging = true;
+  offset.x = e.clientX - appWindow.offsetLeft;
+  offset.y = e.clientY - appWindow.offsetTop;
+});
+
+document.addEventListener("mousemove", (e) => {
+  if (isDragging) {
+    appWindow.style.left = `${e.clientX - offset.x}px`;
+    appWindow.style.top = `${e.clientY - offset.y}px`;
+  }
+});
+
+document.addEventListener("mouseup", () => {
+  isDragging = false;
+});
+
+initializeLandingPage();

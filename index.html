@@ -8,72 +8,96 @@
     <title>RNOC Assistant</title>
   </head>
   <body>
-    <div class="container max-container">
-      <header id="header">
-        <img src="./resources/images/logo.jpg" alt="logo" id="logo" />
+    <div id="app-window" class="resizable-window">
+      <div class="container max-container">
+        <header id="header">
+          <img src="./resources/images/logo.jpg" alt="logo" id="logo" />
 
-        <div id="header__btns-container">
-          <button class="fullscreen-toggle-btns">
-            <img
-              src="./resources/icons/open-fullscreen-icon.png"
-              alt="Open Fullscreen"
-            />
-          </button>
-          <button class="fullscreen-toggle-btns">
-            <img
-              src="./resources/icons/close-fullscreen-icon.png"
-              alt="Close Fullscreen"
-              class="hidden"
-            />
-          </button>
-          <button>
-            <img src="./resources/icons/close-icon.png" alt="Close Icon" />
-          </button>
-        </div>
-      </header>
-
-      <main id="main">
-        <div id="chat-body">
-          <!-- Chat content goes here -->
-        </div>
-
-        <div id="chat-input">
-          <textarea
-            name=""
-            id="message-input"
-            placeholder="Type your message..."
-          ></textarea>
-
-          <div id="chat-input-btn-container">
-            <div id="model-select-dropdown">
+          <div id="header__btns-container">
+            <button class="fullscreen-toggle-btns" id="maximize-btn">
               <img
-                src="./resources/icons/globe-icon.png"
-                alt=""
-                class="icon globe-icon"
-              />
-
-              <span>Ask O3</span>
-
-              <div class="divider"></div>
-
-              <img
-                src="./resources/icons/chevron-down-icon.png"
-                alt=""
-                class="icon caret-down-icon"
-              />
-            </div>
-
-            <button id="send-btn">
-              <img
-                src="resources/icons/paper-plane-icon.png"
-                alt="Paper plane icon"
+                src="./resources/icons/open-fullscreen-icon.png"
+                alt="Open Fullscreen"
               />
             </button>
+            <button class="fullscreen-toggle-btns hidden" id="minimize-btn">
+              <img
+                src="./resources/icons/close-fullscreen-icon.png"
+                alt="Close Fullscreen"
+              />
+            </button>
+            <button>
+              <img src="./resources/icons/close-icon.png" alt="Close Icon" />
+            </button>
           </div>
-        </div>
-      </main>
-    </div>
+        </header>
 
+        <div id="landing-page">
+          <h1>Welcome to RNOC Copilot</h1>
+          <p>Select a model to start chatting</p>
+
+          <div class="model-selection">
+            <button
+              class="model-button"
+              data-model="Ask Knowledge Base (Ask03)"
+            >
+              Ask Knowledge Base (Ask03)
+            </button>
+            <button class="model-button" data-model="Troubleshoot (Prompt BOT)">
+              Troubleshoot (Prompt BOT)
+            </button>
+            <button
+              class="model-button"
+              data-model="Query Fault Reason (RCA and POF)"
+            >
+              Query Fault Reason (RCA and POF)
+            </button>
+          </div>
+          <div id="confirmation-message"></div>
+        </div>
+
+        <main id="main" class="hidden">
+          <div id="chat-body">
+            <!-- Chat content goes here -->
+          </div>
+
+          <div id="chat-input">
+            <textarea
+              name=""
+              id="message-input"
+              placeholder="Type your message..."
+            ></textarea>
+
+            <div id="chat-input-btn-container">
+              <div id="model-select-dropdown">
+                <img
+                  src="./resources/icons/globe-icon.png"
+                  alt=""
+                  class="icon globe-icon"
+                />
+
+                <span id="input-model-name">Ask O3</span>
+
+                <div class="divider"></div>
+
+                <img
+                  src="./resources/icons/chevron-down-icon.png"
+                  alt=""
+                  class="icon caret-down-icon"
+                />
+              </div>
+
+              <button id="send-btn" disabled>
+                <img
+                  src="resources/icons/paper-plane-icon.png"
+                  alt="Paper plane icon"
+                />
+              </button>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
     <script src="script.js"></script>
   </body>
 </html>

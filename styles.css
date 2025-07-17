@@ -1,9 +1,13 @@
 :root {
   --red: #cf0a2c;
   --light-pink: #f3c2ca;
-  --white: #f7f7f7;
+  --white: #ffffff;
+  --off-white: #f7f7f7;
   --dark-gray: #393939;
   --black: #2c2c2c;
+  --border-color: #e2e8f0;
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --border-radius: 12px;
 }
 
 * {
@@ -17,18 +21,109 @@ body {
   background-color: var(--white);
 }
 
+button {
+  cursor: pointer;
+}
+
 .hidden {
-  display: none;
+  display: none !important;
+}
+
+.resizable-window {
+  position: absolute;
+  top: 50px;
+  left: 50px;
+  width: 600px;
+  height: 600px;
+  min-width: 400px;
+  min-height: 500px;
+  max-width: 100vw;
+  max-height: 100vh;
+  resize: both;
+  overflow: auto;
+  border: 1px solid #ccc;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  background-color: transparent;
+  z-index: 10;
+
+  container-type: size;
 }
 
 .container {
   width: 100%;
-  height: 100vh;
+  height: 100%;
 
   display: flex;
   flex-direction: column;
 
   overflow: hidden;
+}
+
+#landing-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 2rem;
+  text-align: center;
+}
+#landing-page .landing-logo {
+  height: 3.5rem;
+  margin-bottom: 2rem;
+}
+#landing-page h1 {
+  font-size: 1.6rem;
+  margin-bottom: 0.5rem;
+  color: var(--black);
+}
+#landing-page p {
+  font-size: 1rem;
+  color: var(--dark-gray);
+  margin-bottom: 3rem;
+}
+
+.model-selection {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.model-button {
+  background: var(--border-color);
+  color: var(--black);
+  border: none;
+  border-radius: 8px;
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.model-button:hover {
+  background: var(--red);
+  color: var(--white);
+  transform: translateY(-2px);
+}
+
+.model-button.selected {
+  background: var(--red);
+  color: var(--white);
+  box-shadow: 0 0 0 3px rgba(207, 10, 44, 0.2);
+}
+
+#confirmation-message {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: var(--dark-gray);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+#confirmation-message.show {
+  opacity: 1;
 }
 
 /* header */
@@ -54,7 +149,7 @@ body {
 }
 
 #header__btns-container .fullscreen-toggle-btns {
-  margin-right: 0.2rem;
+  margin-right: 0.5rem;
 }
 
 #header__btns-container img {
@@ -170,46 +265,6 @@ body {
   font-size: 0.75rem;
 }
 
-/* .message {
-  margin-bottom: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  animation: slideIn 0.3s ease;
-}
-
-.message.user {
-  align-items: flex-end;
-}
-
-.message.ai {
-  align-items: flex-start;
-}
-
-.message-content {
-  max-width: 90%;
-
-  border-radius: 15px;
-
-  font-size: 1rem;
-  line-height: 1.4;
-
-  transition: transform 0.2s;
-  word-break: break-word;
-}
-
-.user .message-content {
-  background: var(--light-pink);
-  color: var(--black);
-
-  border-radius: 1rem;
-  padding: 0.6rem 1rem;
-}
-
-.ai .message-content {
-  color: var(--dark-gray);
-  border-radius: 1rem;
-} */
-
 #chat-input {
   background: var(--white);
 
@@ -309,42 +364,117 @@ body {
   height: 1.1rem;
 }
 
+#chat-input #send-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
 .loading {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 20px 0;
-    position: relative;
-    width: 40px;
-    height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+  position: relative;
+  width: 40px;
+  height: 40px;
 }
 
 .loading div {
-    position: absolute;
-    width: 8px;
-    height: 8px;
-    background: var(--red);
-    border-radius: 50%;
-    animation: pulse 1.2s ease-in-out infinite;
-    transform-origin: center;
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: var(--red);
+  border-radius: 50%;
+  animation: pulse 1.2s ease-in-out infinite;
+  transform-origin: center;
 }
 
-.loading div:nth-child(1) { --angle: 0deg; animation-delay: 0s; }
-.loading div:nth-child(2) { --angle: 45deg; animation-delay: 0.15s; }
-.loading div:nth-child(3) { --angle: 90deg; animation-delay: 0.3s; }
-.loading div:nth-child(4) { --angle: 135deg; animation-delay: 0.45s; }
-.loading div:nth-child(5) { --angle: 180deg; animation-delay: 0.6s; }
-.loading div:nth-child(6) { --angle: 225deg; animation-delay: 0.75s; }
-.loading div:nth-child(7) { --angle: 270deg; animation-delay: 0.9s; }
-.loading div:nth-child(8) { --angle: 315deg; animation-delay: 1.05s; }
+.loading div:nth-child(1) {
+  --angle: 0deg;
+  animation-delay: 0s;
+}
+.loading div:nth-child(2) {
+  --angle: 45deg;
+  animation-delay: 0.15s;
+}
+.loading div:nth-child(3) {
+  --angle: 90deg;
+  animation-delay: 0.3s;
+}
+.loading div:nth-child(4) {
+  --angle: 135deg;
+  animation-delay: 0.45s;
+}
+.loading div:nth-child(5) {
+  --angle: 180deg;
+  animation-delay: 0.6s;
+}
+.loading div:nth-child(6) {
+  --angle: 225deg;
+  animation-delay: 0.75s;
+}
+.loading div:nth-child(7) {
+  --angle: 270deg;
+  animation-delay: 0.9s;
+}
+.loading div:nth-child(8) {
+  --angle: 315deg;
+  animation-delay: 1.05s;
+}
 
 @keyframes pulse {
-    0%, 100% {
-        transform: rotate(var(--angle)) translate(16px) scale(1);
-        opacity: 0.4;
-    }
-    50% {
-        transform: rotate(var(--angle)) translate(16px) scale(1.5);
-        opacity: 1;
-    }
+  0%,
+  100% {
+    transform: rotate(var(--angle)) translate(16px) scale(1);
+    opacity: 0.4;
+  }
+  50% {
+    transform: rotate(var(--angle)) translate(16px) scale(1.5);
+    opacity: 1;
+  }
+}
+
+@container (min-width: 768px) {
+  #header {
+    padding: 1.5rem;
+  }
+
+  #chat-body {
+    padding: 1rem 1.5rem;
+  }
+
+  .user .message-wrapper {
+    max-width: 70%;
+  }
+
+  #chat-input {
+    margin: 1.5rem 1.5rem;
+  }
+}
+
+@container (min-width: 1024px) {
+  #header {
+    padding: 1.5rem 5rem;
+  }
+
+  #header__btns-container img {
+    height: 1.1rem;
+  }
+
+  #chat-body {
+    padding: 1rem 5rem;
+  }
+
+  .user .message-wrapper {
+    max-width: 55%;
+  }
+
+  #chat-input {
+    margin: 2rem 5rem;
+    gap: 1.5rem;
+  }
+
+  #model-select-dropdown {
+    padding: 0.6rem 0.75rem;
+  }
 }
