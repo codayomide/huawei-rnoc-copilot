@@ -322,6 +322,8 @@ button {
   max-width: fit-content;
   box-shadow: 0 0 0 transparent;
   transition: box-shadow 0.2s ease;
+
+  position: relative;
 }
 
 #model-select-dropdown .label {
@@ -342,6 +344,32 @@ button {
 #model-select-dropdown .caret-down-icon {
   height: 9px;
   width: 12px;
+}
+
+.dropdown-menu {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  background: var(--white);
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  box-shadow: var(--shadow);
+  margin-top: 0.5rem;
+  z-index: 100;
+  list-style: none;
+  padding: 0.25rem 0;
+  width: max-content;
+  min-width: 200px;
+}
+
+.dropdown-menu li {
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.dropdown-menu li:hover {
+  background: var(--off-white);
 }
 
 #chat-input #send-btn {

@@ -1,12 +1,16 @@
 const sendBtn = document.getElementById("send-btn");
 const messageInput = document.getElementById("message-input");
 const chatBody = document.getElementById("chat-body");
+const dropdown = document.getElementById('model-select-dropdown');
+const dropdownMenu = document.getElementById('model-options');
+const modelNameDisplay = document.getElementById('input-model-name');
 
 const maxHeight = parseInt(
   window.getComputedStyle(messageInput).getPropertyValue("max-height")
 );
 
 let isLoading = false;
+let selectedModel = modelNameDisplay.textContent; 
 
 // State management for conversation flow
 let conversationState = {
@@ -132,6 +136,8 @@ const hideLoading = () => {
 const sendMessage = () => {
   const text = messageInput.value.trim();
   if (!text) return;
+
+  console.log('Sending with model:', selectedModel);
 
   const formattedText = text.replace(/\n/g, "<br>");
   addMessage(formattedText, "user");
@@ -343,3 +349,29 @@ document.addEventListener("mouseup", () => {
 });
 
 initializeLandingPage();
+
+// Toggle dropdown
+dropdown.addEventListener('click', (e) => {
+  // Prevent toggle if clicking on a menu item
+  if (e.target.closest('#model-options')) return;
+
+  dropdownMenu.classList.toggle('hidden');
+});
+
+// Select model
+dropdownMenu.addEventListener('click', (e) => {
+  const item = e.target.closest("li");
+
+  if (item) {
+    selectedModel = item.dataset.model;
+    modelNameDisplay.textContent = selectedModel;
+    dropdownMenu.classList.add('hidden');
+  }
+});
+
+// Optional: close dropdown if user clicks outside
+document.addEventListener('click', (e) => {
+  if (!dropdown.contains(e.target)) {
+    dropdownMenu.classList.add('hidden');
+  }
+});
